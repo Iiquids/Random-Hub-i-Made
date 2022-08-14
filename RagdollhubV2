@@ -1,0 +1,558 @@
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Mapple7777/Visual-UI-Library/main/Source.lua'))()
+local Window = Library:CreateWindow('Raghub', 'Ragdoll')
+
+
+local Scripts = Window:CreateTab('Scripts', true, 'rbxassetid://', Vector2.new(484, 44), Vector2.new(36, 36))
+local Settings = Window:CreateTab('Settings', true, 'rbxassetid://', Vector2.new(484, 44), Vector2.new(36, 36))
+local Misc = Window:CreateTab('Misc', true, 'rbxassetid://', Vector2.new(484, 44), Vector2.new(36, 36))
+
+local SSection = Settings:CreateSection('Section')
+local MSection = Scripts:CreateSection('Section')
+local MSection2 = Misc:CreateSection('Section')
+
+--Sutff
+
+local Settings = {
+	TogAntiRagdoll = false,
+	PushAura = false,
+	TogAntiFling = false,
+	BullyTarget = nil,
+	Bullying = false,
+	Flinging = false
+}
+local FileSettings = {
+	whitelistUsers = {"I0vIy"},
+	PotionMethod = "Invisible"
+}
+if not isfile("LovlyRagdoll.lua") then
+	Notific.prompt("Lovly's Ragdoll", "Looks Like Your New Here, Enjoy The Script!", 5)
+else
+	FileSettings = game:GetService("HttpService"):JSONDecode(readfile("LovlyRagdoll.lua"))
+end
+
+local cmdrs = game:GetService("ReplicatedStorage")
+if cmdrs:FindFirstChild("DefaultChatSystemChatEvents") and cmdrs.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest") then sayremote = cmdrs.DefaultChatSystemChatEvents.SayMessageRequest end
+
+local SLP = game.Players.LocalPlayer
+local players = game:GetService("Players")
+local lp = game.Players.LocalPlayer
+function findplr(args, tbl)
+    if tbl == nil then
+        local tbl = players:GetPlayers()
+        if args == "FREINDS" then
+            local vAges = {} 
+            for _,v in pairs(tbl) do
+                if v:IsFriendsWith(lp.UserId) and v ~= lp then
+                    vAges[#vAges+1] = v
+                end
+            end
+            return vAges[math.random(1,#vAges)]
+        else 
+            for _,v in pairs(tbl) do
+                if v.Name:lower():find(args:lower()) or v.DisplayName:lower():find(args:lower()) then
+                    return v
+                end
+            end
+        end
+    else
+        for _, plr in pairs(tbl) do
+            if plr.UserName:lower():find(args:lower()) or plr.DisplayName:lower():find(args:lower()) then
+                return plr
+            end
+        end
+    end
+end
+
+local roastPick = {
+    "Anne Frank hid better then you",
+    "Go to bed",
+    "You need a shower",
+    "You look like a barbie doll which i gave a makeover with my markers",
+    "Your momma back built like a skate ramp I can do an ollie off her",
+    "You look like the 1% of germs that hand-soap doesn't kill",
+    "Boy u literally be smelling like tv oil",
+    "No wonder your parents hate you",
+    "You haven't had any neurological brain development in the last decade",
+    "I will build a sandcastle out of your dead nans ashes",
+    "Your brain has the capacity of a dried sea sponge",
+    "You make me cringe, I literally want to quit this game because of you",
+    "Your outfit is horrendous",
+    "Your name is horrendous",
+    "Your IQ is so low that even scientists cant zoom in on it",
+    "You are a femmie",
+    "You are fat",
+    "You stink of your nans cremation",
+    "How many people does it take to screw in a lightbulb? 20 of your kind",
+    "I can smell you through the screen",
+    "Candy shop got robbed, didn't know you did it",
+    "You are poor",
+    "Your brain is the size of an average ants",
+    "Everything you've worked for, your whole life is embarassing",
+    "Go back to school",
+    "Are you dumb or just young",
+    "You make me feel e-sick",
+    "I very much dislike you",
+    "Settle along you peasent",
+    "You are worth nothing",
+    "I hope you suffer",
+    "Your words, they make no sense",
+    "Please leave the server you cretin",
+    "You make me sick",
+    "Huh? Didn't know infants could play roblox",
+    "I bet you live in a poverty stricken country",
+    "You belong in the special ed class",
+    "Is it just me or does someone smell, nvm thats just",
+    "Is it just me or is someone dumb, nvm thats just",
+    "Is it just me or is someone fat, nvm thats just",
+	"You'r Wrist Looks Like A BarCode"
+}
+
+function say(msg)
+	sayremote:FireServer(msg, "All")
+end
+
+--Buttons Here
+
+local Toggle = MSection:CreateToggle('Push Aura', false, Color3.fromRGB(0, 125, 255), 0.25, function(bool)
+    if bool == true then
+        Settings.PushAura = true
+    else
+        Settings.PushAura = false
+    end
+end)
+
+local Button = MSection:CreateButton('Anti-Ragdoll', function()
+    Settings.TogAntiRagdoll = true;
+	(game:GetService("ReplicatedStorage")).RagdollHandler:Remove();
+	local PlayerName = game.Players.LocalPlayer.Name .. " ";
+	local player = (game:GetService("Players")).LocalPlayer;
+	local chr = player.Character;
+	local Humanoid = player.Character:FindFirstChild("Humanoid");
+	Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp);
+	chr.Animate.Disabled = false;
+	Humanoid.AutoRotate = true;
+	chr.StartRagdoll:Remove();
+	chr["Falling down"]:Remove();
+	chr.Pushed:Remove();
+	chr.RagdollMe:Remove();
+	chr.KillScript:Remove();
+	local b = Instance.new("BodyVelocity", chr.HumanoidRootPart);
+	b.MaxForce = Vector3.new(0, 0, 0);
+	b.Name = "PushForce";
+	player.Character.Humanoid.Died:Connect(function()
+		wait(game.Players.RespawnTime + 0);
+		local player = game.Players.LocalPlayer;
+		local chr = player.Character;
+		local Humanoid = player.Character:FindFirstChild("Humanoid");
+		Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp);
+		chr.Animate.Disabled = false;
+		Humanoid.AutoRotate = true;
+		chr.StartRagdoll:Remove();
+		chr["Falling down"]:Remove();
+		chr.Pushed:Remove();
+		chr.RagdollMe:Remove();
+		chr.KillScript:Remove();
+		local b = Instance.new("BodyVelocity", chr.HumanoidRootPart);
+		b.MaxForce = Vector3.new(0, 0, 0);
+		b.Name = "PushForce";
+	end);
+	player.CharacterAdded:Connect(function(Character)
+		(Character:WaitForChild("Humanoid")).Died:Connect(function()
+			wait(game.Players.RespawnTime + 0);
+			local player = game.Players.LocalPlayer;
+			local chr = player.Character;
+			local Humanoid = player.Character:FindFirstChild("Humanoid");
+			Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp);
+			chr.Animate.Disabled = false;
+			Humanoid.AutoRotate = true;
+			chr.StartRagdoll:Remove();
+			chr["Falling down"]:Remove();
+			chr.Pushed:Remove();
+			chr.RagdollMe:Remove();
+			chr.KillScript:Remove();
+			local b = Instance.new("BodyVelocity", chr.HumanoidRootPart);
+			b.MaxForce = Vector3.new(0, 0, 0);
+			b.Name = "PushForce";
+		end);
+	end);
+    Library:CreateNotification("Lovly's Ragdoll", 'Anti-Ragdoll Executed Successfully!', 5)
+end)
+
+local Button = MSection:CreateButton('Potion Fling', function()
+    if FileSettings.PotionMethod == "Invisible" then
+        local tool = "BLANK";
+        char = game.Players.LocalPlayer.Character;
+        for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if v:IsA("Tool") and v.Name == "potion" then
+                tool = v;
+            else
+                for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.Name == "potion" then
+                        tool = v;
+                        char.Humanoid:EquipTool(tool);
+                    end;
+                end;
+            end;
+        end;
+        wait(0);
+        local toolmainfling = tool.InSide;
+        tool:Activate();
+        repeat
+            wait();
+        until toolmainfling.Transparency == 1;
+        tool.Script:Remove();
+        for i, v in pairs(tool.Handle:GetChildren()) do
+            v:Remove();
+        end;
+        for i, d in pairs(tool:GetChildren()) do
+            if d.Name ~= "Handle" and d:IsA("Part") then
+                local temp = Instance.new("BodyPosition");
+                temp.MaxForce = Vector3.new(math.huge, math.huge, math.huge);
+                temp.Parent = d;
+                local temp1 = Instance.new("BodyThrust");
+                temp1.Location = Vector3.new(5, 0, 0);
+                temp1.Force = Vector3.new(10000, 10000, 10000);
+                temp1.Parent = d;
+                d.CanCollide = false;
+                (game:GetService("RunService")).RenderStepped:Connect(function()
+                    d.Position = (game.Players.LocalPlayer:GetMouse()).Hit.p + Vector3.new(0, 2, 0);
+                    temp.Position = (game.Players.LocalPlayer:GetMouse()).Hit.p + Vector3.new(0, 2, 0);
+                end);
+                (game:GetService("RunService")).Heartbeat:connect(function()
+                    d.Velocity = Vector3.new(-30, 0, 0);
+                end);
+            end;
+        end;
+        local a = Instance.new("SelectionBox", toolmainfling);
+        a.Name = "SelectionBoxCreated";
+        a.Adornee = toolmainfling;
+        a.Color3 = Color3.new(255, 255, 255);
+        a.LineThickness = 0;
+        tool.Handle:Remove();
+        Library:CreateNotification("Lovly's Ragdoll", 'Potion Fling Executed Successfully!', 5)
+    elseif FileSettings.PotionMethod == "Visible" then
+        local tool = "this is blank";
+        char = game.Players.LocalPlayer.Character;
+        for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if v:IsA("Tool") and v.Name == "potion" then
+                tool = v;
+            else
+                for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.Name == "potion" then
+                        tool = v;
+                        char.Humanoid:EquipTool(tool);
+                    end;
+                end;
+            end;
+        end;
+        wait();
+        for i, v in pairs(tool.Handle:GetChildren()) do
+            v:Remove();
+        end;
+        for i, d in pairs(tool:GetChildren()) do
+            if d.Name ~= "Handle" and d:IsA("Part") then
+                local temp = Instance.new("BodyPosition");
+                temp.MaxForce = Vector3.new(math.huge, math.huge, math.huge);
+                temp.Parent = d;
+                local temp1 = Instance.new("BodyThrust");
+                temp1.Location = Vector3.new(5, 0, 0);
+                temp1.Force = Vector3.new(10000, 10000, 10000);
+                temp1.Parent = d;
+                d.CanCollide = false;
+                (game:GetService("RunService")).RenderStepped:Connect(function()
+                    d.Position = (game.Players.LocalPlayer:GetMouse()).Hit.p + Vector3.new(0, 2, 0);
+                    temp.Position = (game.Players.LocalPlayer:GetMouse()).Hit.p + Vector3.new(0, 2, 0);
+                end);
+                (game:GetService("RunService")).Heartbeat:connect(function()
+                    d.Velocity = Vector3.new(-30, 0, 0);
+                end);
+            end;
+        end;
+        tool.Handle:Remove();
+        Library:CreateNotification("Lovly's Ragdoll", 'Potion Fling Executed Successfully!', 5)
+    end;
+end)
+
+local Button = MSection:CreateButton('HRP Fling', function()
+    local tool = "BLANK";
+    char = game.Players.LocalPlayer.Character;
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Tool") and v.Name == "potion" then
+            tool = v;
+        else
+            for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if v.Name == "potion" then
+                    tool = v;
+                    char.Humanoid:EquipTool(tool);
+                end;
+            end;
+        end;
+    end;
+    wait(0);
+    local toolmainfling = tool.InSide;
+    tool:Activate();
+    repeat
+        wait();
+    until toolmainfling.Transparency == 1;
+    tool.Script:Remove();
+    for i, v in pairs(tool.Handle:GetChildren()) do
+        v:Remove();
+    end;
+    for i, d in pairs(tool:GetChildren()) do
+        if d.Name ~= "Handle" and d:IsA("Part") then
+            local temp = Instance.new("BodyPosition");
+            temp.MaxForce = Vector3.new(math.huge, math.huge, math.huge);
+            temp.Parent = d;
+            local temp1 = Instance.new("BodyThrust");
+            temp1.Location = Vector3.new(5, 0, 0);
+            temp1.Force = Vector3.new(10000, 10000, 10000);
+            temp1.Parent = d;
+            d.CanCollide = false;
+            (game:GetService("RunService")).RenderStepped:Connect(function()
+                d.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position;
+                temp.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position;
+            end);
+            (game:GetService("RunService")).Heartbeat:connect(function()
+                d.Velocity = Vector3.new(-30, 0, 0);
+            end);
+        end;
+    end;
+    local a = Instance.new("SelectionBox", toolmainfling);
+    a.Name = "SelectionBoxCreated";
+    a.Adornee = toolmainfling;
+    a.Color3 = Color3.new(255, 255, 255);
+    a.LineThickness = 0;
+    tool.Handle:Remove();
+    Library:CreateNotification("Lovly's Ragdoll", 'HRP Potion Fling Executed Successfully!', 5)
+end)
+
+local Button = MSection:CreateButton('Dick Potion', function()
+    local tool = "this is blank"
+	char = game.Players.LocalPlayer.Character
+	for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+		if v:IsA("Tool") and v.Name == "potion" then
+			tool = v
+		else
+			for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+				if v.Name == "potion" then
+					tool = v
+				end
+			end
+		end
+	end
+	local lp = game.Players.LocalPlayer
+	local char = game.Players.LocalPlayer.Character
+	local v = tool
+	v.Parent = game.Players.LocalPlayer.Character
+	v.GripForward = Vector3.new(-0.034, 0.999, 0.017)
+	v.GripPos = Vector3.new(1.1, 0.529, 1.866)
+	v.GripRight = Vector3.new(0.999, 0.034, 0)
+	v.GripUp = Vector3.new(0.001, -0.017, 1)
+	for i, v in pairs(v.Handle:GetDescendants()) do
+		v:Remove()
+	end
+	char.Humanoid:EquipTool(tool)
+    Library:CreateNotification("Lovly's Ragdoll", 'Dick Potion Executed Successfully!', 5)
+end)
+
+--MSection2
+
+local Button = MSection2:CreateButton('Anti-Fling', function()
+    if Settings.TogAntiFling == true then
+        Library:CreateNotification("Lovly's Ragdoll", 'Anti-Fling Is In Use', 5)
+		return;
+	end;
+	local Services = setmetatable({}, {
+		__index = function(Self, Index)
+			local NewService = game.GetService(game, Index);
+			if NewService then
+				Self[Index] = NewService;
+			end;
+			return NewService;
+		end
+	});
+	local LocalPlayer = Services.Players.LocalPlayer;
+	local function PlayerAdded(Player)
+		local Detected = false;
+		local Character;
+		local PrimaryPart;
+		local function CharacterAdded(NewCharacter)
+			Character = NewCharacter;
+			repeat
+				wait();
+				PrimaryPart = NewCharacter:FindFirstChild("HumanoidRootPart");
+			until PrimaryPart;
+			Detected = false;
+		end;
+		CharacterAdded(Player.Character or Player.CharacterAdded:Wait());
+		Player.CharacterAdded:Connect(CharacterAdded);
+		Services.RunService.Heartbeat:Connect(function()
+			if Character and Character:IsDescendantOf(workspace) and (PrimaryPart and PrimaryPart:IsDescendantOf(Character)) then
+				if PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 or PrimaryPart.AssemblyLinearVelocity.Magnitude > 100 then
+					if Detected == false then
+						wait();
+					end;
+					Detected = true;
+					for i, v in ipairs(Character:GetDescendants()) do
+						if v:IsA("BasePart") then
+							v.CanCollide = false;
+							v.AssemblyAngularVelocity = Vector3.new(0, 0, 0);
+							v.AssemblyLinearVelocity = Vector3.new(0, 0, 0);
+							v.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0);
+						end;
+					end;
+					PrimaryPart.CanCollide = false;
+					PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0);
+					PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0);
+					PrimaryPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0);
+				end;
+			end;
+		end);
+	end;
+	for i, v in ipairs(Services.Players:GetPlayers()) do
+		if v ~= LocalPlayer then
+			PlayerAdded(v);
+		end;
+	end;
+	Services.Players.PlayerAdded:Connect(PlayerAdded);
+	local LastPosition = nil;
+	Services.RunService.Heartbeat:Connect(function()
+		pcall(function()
+			local PrimaryPart = LocalPlayer.Character.PrimaryPart;
+			if PrimaryPart.AssemblyLinearVelocity.Magnitude > 250 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 250 then
+				PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0);
+				PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0);
+				PrimaryPart.CFrame = LastPosition;
+				game.StarterGui:SetCore("ChatMakeSystemMessage", {
+					Text = "You were flung. Neutralizing velocity.",
+					Color = Color3.fromRGB(255, 0, 0)
+				});
+			elseif PrimaryPart.AssemblyLinearVelocity.Magnitude < 50 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 then
+				LastPosition = PrimaryPart.CFrame;
+			end;
+		end);
+	end);
+	Notific.prompt("Lovly's Ragdoll", "Anti-Fling Executed Successfully!", 3);
+end)
+
+
+local Textbox = MSection2:CreateTextbox('Target', 'Input', function(value)
+    local findingbullytarget = findplr(value);
+	if findingbullytarget then
+		Settings.BullyTarget = findingbullytarget;
+	else
+		Notific.prompt("Lovly's Ragdoll", "Player Not Found.", 3);
+	end;
+end)
+
+local Button = MSection2:CreateButton('Bully Target', function()
+    if Settings.Bullying == false then
+		if Settings.BullyTarget then
+			Settings.Bullying = true;
+		end;
+	else
+		Settings.Bullying = false;
+	end;
+end)
+
+local Button = MSection2:CreateButton('ToolKill Target', function()
+    local Player = Settings.BullyTarget;
+	Player.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame;
+	local plr = game.Players.LocalPlayer;
+	local char = plr.Character;
+	local Hum = char.Humanoid;
+	local newHum = Hum:Clone();
+	workspace.CurrentCamera.CameraSubject = char.Head;
+	newHum.Parent = char;
+	Hum:Destroy();
+	local tool = "this is blank";
+	char = game.Players.LocalPlayer.Character;
+	for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+		if v:IsA("Tool") and v.Name == "potion" then
+			tool = v;
+		else
+			for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+				if v.Name == "potion" then
+					tool = v;
+					char.Humanoid:EquipTool(tool);
+				end;
+			end;
+		end;
+	end;
+	repeat
+		Player.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame;
+		wait();
+	until tool.Parent == Player.Character;
+	game.Players.LocalPlayer.Character.Humanoid.Health = 0;
+	wait(game.Players.RespawnTime + 0);
+	char.HumanoidRootPart.CFrame = Player.Character.HumanoidRootPart.CFrame;
+end)
+
+local Button = MSection2:CreateButton('Roast Target', function()
+    local value = math.random(1, #roastPick);
+	local picked_value = roastPick[value];
+	say(tostring(picked_value) .. ", " .. Settings.BullyTarget.Name);
+end)
+
+--Settings
+
+local Textbox = SSection:CreateTextbox('Push-Aura Whitelist', '', function(value)
+    local thewhiteplayer = findplr(value);
+	table.insert(FileSettings.whitelistUsers, thewhiteplayer.Name);
+	writefile("LovlyRagdoll.lua", (game:GetService("HttpService")):JSONEncode(FileSettings));
+    Library:CreateNotification("Lovly's Ragdoll", "You Whitelisted " .. thewhiteplayer.Name .. "!", 5)
+end)
+
+local Textbox = SSection:CreateTextbox('Push-Aura Blacklist', '', function(value)
+    local thewhiteplayer = findplr(value);
+	table.remove(FileSettings.whitelistUsers, table.find(FileSettings.whitelistUsers, thewhiteplayer.Name));
+	writefile("LovlyRagdoll.lua", (game:GetService("HttpService")):JSONEncode(FileSettings));
+    Library:CreateNotification("Lovly's Ragdoll", "You Blacklisted " .. thewhiteplayer.Name .. "!", 5)
+end)
+
+local Dropdown = SSection:CreateDropdown('PotionFling Method', {'Invisible', 'Visible'}, 0.25, function(Value)
+    FileSettings.PotionMethod = mob;
+	writefile("LovlyRagdoll.lua", (game:GetService("HttpService")):JSONEncode(FileSettings));
+    Library:CreateNotification("Lovly's Ragdoll", "You Changed The Potion Fling Method To " .. mob .. "!", 5)
+end)
+
+game:GetService("RunService").Stepped:connect(function()
+	if Settings.Bullying == true then
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Settings.BullyTarget.Character.HumanoidRootPart.CFrame;
+		for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+			if child:IsA("BasePart") and child.CanCollide == true then
+				child.CanCollide = false;
+			end;
+		end;
+	end;
+end);
+
+local tool = "this is blank";
+char = game.Players.LocalPlayer.Character;
+local lp = game.Players.LocalPlayer;
+for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+	if v:IsA("Tool") and v.Name == "Push" then
+		tool = v;
+	else
+		for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+			if v.Name == "Push" then
+				tool = v;
+			end;
+		end;
+	end;
+end;
+spawn(function()
+	while wait(0) do
+		if Settings.PushAura == true then
+			pcall(function()
+				for i, v in pairs(game:GetService("Players")):GetPlayers() do
+					local PlayerPos = lp.Character.HumanoidRootPart.Position;
+					local Range = (PlayerPos - v.Character.HumanoidRootPart.Position).magnitude;
+					if v ~= lp and v.Name ~= Owner and Range < 10 and (not table.find(FileSettings.whitelistUsers, v.Name)) then
+						lp.Character.Push.PushTool:FireServer(v.Character);
+					end;
+				end;
+			end);
+		end;
+	end;
+end);

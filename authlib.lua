@@ -160,7 +160,7 @@ function edinLib:Window()
 	MainFrame.Parent = EdinsHubLib
 	MainFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
 	MainFrame.Position = UDim2.new(0.330445558, 0, 0.330043852, 0)
-	MainFrame.Size = UDim2.new(0, 547, 0, 170)
+	MainFrame.Size = UDim2.new(0, 547, 0, 210)
 
 	MainFrameUICorner.CornerRadius = UDim.new(0, 11)
 	MainFrameUICorner.Name = "MainFrameUICorner"
@@ -183,7 +183,7 @@ function edinLib:Window()
 	TabHolderFrame.Name = "TabHolderFrame"
 	TabHolderFrame.Parent = MainFrame
 	TabHolderFrame.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
-	TabHolderFrame.Position = UDim2.new(0.0251439176, 0, 0.274975574, 0)
+	TabHolderFrame.Position = UDim2.new(0.0251439176, 0, 0.204975574, 0)
 	TabHolderFrame.Size = UDim2.new(0, 519, 0, 31)
 
 	TabHolderFrameUICorner.CornerRadius = UDim.new(0, 11)
@@ -216,7 +216,8 @@ function edinLib:Window()
 
 	TabHolderPadding.Name = "TabHolderPadding"
 	TabHolderPadding.Parent = TabHolder
-	TabHolderPadding.PaddingLeft = UDim.new(0, 4)
+	TabHolderPadding.PaddingLeft = UDim.new(0, 0)
+    TabHolderPadding.PaddingRight = UDim.new(0, 35)
 	TabHolderPadding.PaddingTop = UDim.new(0, 4)
 
 	Glow_3.Name = "Glow"
@@ -255,15 +256,15 @@ function edinLib:Window()
 		Tab.Font = Enum.Font.Gotham
 		Tab.Text = text
 		Tab.TextColor3 = Color3.fromRGB(195, 195, 195)
-		Tab.TextSize = 14.000
+		Tab.TextSize = 13.000
 		Tab.Size = UDim2.new(0, Tab.TextBounds.X + 10, 0, 24)
 		Tab.TextTransparency = 0.5
 
 		Container.Name = "Container"
 		Container.Parent = Containers
 		Container.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
-		Container.Position = UDim2.new(0.0251439176, 0, 0.48937912, 0)
-		Container.Size = UDim2.new(0, 519, 0, 70)
+		Container.Position = UDim2.new(0.0221439176, 0, 0.40037912, 0)
+		Container.Size = UDim2.new(0, 519, 0, 115)
 		Container.Visible = false
 
 		ContainerUICorner.CornerRadius = UDim.new(0, 11)
@@ -1292,7 +1293,7 @@ function edinLib:Window()
 			ItemHolder.CanvasSize = UDim2.new(0, 0, 0, ItemHolderUIList.AbsoluteContentSize.Y)
 		end
 
-		function Cont:Textbox(text, disapper, callback)
+		function Cont:Textbox(text, text2, disapper, callback)
 			local Textbox = Instance.new("TextButton")
 			local TextboxUICorner = Instance.new("UICorner")
 			local Title = Instance.new("TextLabel")
@@ -1307,7 +1308,7 @@ function edinLib:Window()
 			Textbox.Size = UDim2.new(0, 491, 0, 37)
 			Textbox.AutoButtonColor = false
 			Textbox.Font = Enum.Font.Gotham
-			Textbox.Text = ""
+			Textbox.Text = "";
 			Textbox.TextColor3 = Color3.fromRGB(195, 195, 195)
 			Textbox.TextSize = 14.000
 
@@ -1333,7 +1334,7 @@ function edinLib:Window()
 			TextBox.Position = UDim2.new(0.985743403, 0, 0.108108111, 0)
 			TextBox.Size = UDim2.new(0, 192, 0, 26)
 			TextBox.Font = Enum.Font.Gotham
-			TextBox.Text = ""
+			TextBox.Text = "Click Me!"
 			TextBox.TextColor3 = Color3.fromRGB(195, 195, 195)
 			TextBox.TextSize = 14.000
 
@@ -1350,6 +1351,7 @@ function edinLib:Window()
 						0.1,
 						true
 					)
+                    TextBox.Text = text2
 				end
 			)
 
@@ -1366,7 +1368,9 @@ function edinLib:Window()
 								true
 							)
 							if disapper then
-								TextBox.Text = ""
+								TextBox.Text = "Click Me!"
+                            -- else
+                            --     TextBox.Text = text2
 							end
 						end
 					end
